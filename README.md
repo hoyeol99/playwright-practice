@@ -44,3 +44,17 @@ Artifacts are saved under /test-results and linked in the HTML report.
 
 \- npm run test:regression
 
+
+
+\## CI (GitHub Actions)
+
+\- Smoke: runs automatically on push/PR to main.
+
+\- Regression: manual workflow (Actions tab → Run workflow).
+
+\- HTML report is uploaded as an artifact after each run.
+
+\- Smoke artifact: `playwright-report`
+
+\- Regression artifact: `playwright-report-regression`
+
