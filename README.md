@@ -1,6 +1,6 @@
-![Playwright Smoke (CI)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-smoke.yml/badge.svg)
-![Playwright Regression (Manual)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-regression.yml/badge.svg)
+[![Playwright Smoke (CI)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-smoke.yml/badge.svg)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-smoke.yml)
 
+[![Playwright Regression (Manual)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-regression.yml/badge.svg)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-regression.yml)
 
 \## Purpose
 
