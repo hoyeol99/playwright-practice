@@ -1,3 +1,7 @@
+![Playwright Smoke (CI)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-smoke.yml/badge.svg)
+![Playwright Regression (Manual)](https://github.com/hoyeol99/playwright-practice/actions/workflows/playwright-regression.yml/badge.svg)
+
+
 \## Purpose
 
 Minimal Playwright E2E automation practice (portfolio-ready): core flow + negative case.
