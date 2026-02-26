@@ -41,6 +41,7 @@ Artifacts are saved under /test-results and linked in the HTML report.
 \## Tests
 
 \- todo.spec.ts: add \& complete (smoke), empty input not added (negative)
+\- todo.spec.ts: smoke / negative / regression(2 tests: filters&counter, delete&clear completed)
 
 
 
