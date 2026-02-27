@@ -28,7 +28,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run smoke tests (Chromium only)
-  	run: npx playwright test -g "\[smoke\]" --project=chromium
+        run: npx playwright test -g "\[smoke\]" --project=chromium
 
       - name: Upload Playwright HTML report
   	if: always()
