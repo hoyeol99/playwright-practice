@@ -114,3 +114,39 @@ test('[regression] Todo: can delete an item and clear completed', async ({ page 
   await expect(page.locator('.todo-list li')).toHaveCount(1);
   await expect(page.locator('.todo-count')).toContainText('1');
 });
+
+test('[regression] Todo: persists items and completion after reload', async ({ page }) => {
+  await page.goto('https://demo.playwright.dev/todomvc/');
+
+  const input = page.locator('.new-todo');
+
+  // 1) 2개 추가
+  await input.fill('Persist A');
+  await input.press('Enter');
+  await input.fill('Persist B');
+  await input.press('Enter');
+
+  // 2) 첫 번째 완료 처리
+  await page.locator('.todo-list li .toggle').first().check();
+
+  // 3) 새로고침
+  await page.reload();
+
+  // 4) 새로고침 후에도 2개가 남아있어야 함
+  await expect(page.locator('.todo-list li')).toHaveCount(2);
+
+  // 5) 완료 상태가 유지되는지 확인 (첫 번째 li가 completed 클래스)
+  await expect(page.locator('.todo-list li').first()).toHaveClass(/completed/);
+
+  // 6) 카운터가 1 item left 인지 확인 (1개만 미완료)
+  await expect(page.locator('.todo-count')).toContainText('1');
+
+  // 7) 필터도 정상 동작하는지 간단 확인
+  await page.getByRole('link', { name: 'Active' }).click();
+  await expect(page.locator('.todo-list li')).toHaveCount(1);
+  await expect(page.locator('.todo-list li label').first()).toHaveText('Persist B');
+
+  await page.getByRole('link', { name: 'Completed' }).click();
+  await expect(page.locator('.todo-list li')).toHaveCount(1);
+  await expect(page.locator('.todo-list li label').first()).toHaveText('Persist A');
+});
