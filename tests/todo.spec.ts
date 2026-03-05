@@ -38,6 +38,29 @@ test('[negative] Todo: does not add item when input is empty', async ({ page }) 
   await expect(page.locator('.todo-list li')).toHaveCount(0);
 });
 
+test('[negative][policy] Todo: allows duplicate titles (duplicates are treated as separate items)', async ({ page }) => {
+  await page.goto('https://demo.playwright.dev/todomvc/');
+
+  const todoInput = page.locator('.new-todo');
+
+  // 동일 텍스트를 2번 입력
+  const title = 'Duplicate Item';
+  await todoInput.fill(title);
+  await todoInput.press('Enter');
+  await todoInput.fill(title);
+  await todoInput.press('Enter');
+
+  // 정책 확인: 중복이 "허용"된다면 2개가 생긴다
+  await expect(page.locator('.todo-list li')).toHaveCount(2);
+
+  // 두 개 모두 같은 라벨 텍스트를 가진다(정합성 강화)
+  await expect(page.locator('.todo-list li label').nth(0)).toHaveText(title);
+  await expect(page.locator('.todo-list li label').nth(1)).toHaveText(title);
+
+  // 카운터도 2로 표시되는지(정책 일관성)
+  await expect(page.locator('.todo-count')).toContainText('2');
+});
+
 test('[regression] Todo: filters and counter behave correctly', async ({ page }) => {
   await page.goto('https://demo.playwright.dev/todomvc/');
 
