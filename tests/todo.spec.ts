@@ -1,41 +1,31 @@
 import { test, expect } from '@playwright/test';
+import { openApp, addTodo, expectTodoCount, toggleTodo, expectTodoLabel, expectTodoCompleted } from './utils/todo';
 
 test('[smoke] Todo: add item and mark as completed', async ({ page }) => {
-  await page.goto('https://demo.playwright.dev/todomvc/');
+  await openApp(page);
 
-  const todoInput = page.locator('.new-todo');
-  await todoInput.fill('Buy milk');
-  await todoInput.press('Enter');
+  await addTodo(page, 'Buy milk');
+  await expectTodoLabel(page, 0, 'Buy milk');
 
-  const firstLabel = page.locator('.todo-list li label').first();
-  await expect(firstLabel).toHaveText('Buy milk');
-
-  // 체크박스 클릭(또는 check)
-  const firstToggle = page.locator('.todo-list li .toggle').first();
-  await firstToggle.check();
-
-  // 완료 상태 확인 (li에 completed 클래스)
-  await expect(page.locator('.todo-list li').first()).toHaveClass(/completed/);
+  await toggleTodo(page, 0);
+  await expectTodoCompleted(page, 0);
 });
 
 // ✅ Negative test: 빈 입력은 추가되지 않는다
 test('[negative] Todo: does not add item when input is empty', async ({ page }) => {
-  await page.goto('https://demo.playwright.dev/todomvc/');
+  await openApp(page);
 
   const todoInput = page.locator('.new-todo');
 
   // 빈 값 그대로 Enter
   await todoInput.fill('');
   await todoInput.press('Enter');
-
-  // 아이템이 없어야 함
-  await expect(page.locator('.todo-list li')).toHaveCount(0);
+  await expectTodoCount(page, 0);
 
   // 공백만 입력해도 추가되지 않아야 함(방어적으로)
   await todoInput.fill('   ');
   await todoInput.press('Enter');
-
-  await expect(page.locator('.todo-list li')).toHaveCount(0);
+  await expectTodoCount(page, 0);
 });
 
 test('[negative][policy] Todo: allows duplicate titles (duplicates are treated as separate items)', async ({ page }) => {
