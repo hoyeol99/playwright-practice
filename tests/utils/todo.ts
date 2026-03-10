@@ -28,3 +28,23 @@ export async function expectTodoLabel(page: Page, index: number, text: string) {
 export async function expectTodoCompleted(page: Page, index = 0) {
   await expect(page.locator('.todo-list li').nth(index)).toHaveClass(/completed/);
 }
+
+export async function expectItemsLeft(page: Page, count: number) {
+  await expect(page.locator('.todo-count')).toContainText(String(count));
+}
+
+export async function setFilter(page: Page, name: 'All' | 'Active' | 'Completed') {
+  await page.getByRole('link', { name }).click();
+}
+
+export async function clearCompleted(page: Page) {
+  const btn = page.getByRole('button', { name: 'Clear completed' });
+  await expect(btn).toBeVisible();
+  await btn.click();
+}
+
+export async function deleteTodo(page: Page, index = 0) {
+  const item = page.locator('.todo-list li').nth(index);
+  await item.hover();
+  await item.locator('.destroy').click();
+}

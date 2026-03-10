@@ -1,5 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { openApp, addTodo, expectTodoCount, toggleTodo, expectTodoLabel, expectTodoCompleted } from './utils/todo';
+import { 
+  openApp, 
+  addTodo, 
+  expectTodoCount, 
+  toggleTodo, 
+  expectTodoLabel, 
+  expectTodoCompleted,
+  expectItemsLeft,
+  setFilter,
+  clearCompleted,
+  deleteTodo
+ } from './utils/todo';
 
 test('[smoke] Todo: add item and mark as completed', async ({ page }) => {
   await openApp(page);
@@ -87,45 +98,38 @@ test('[regression] Todo: filters and counter behave correctly', async ({ page })
 });
 
 test('[regression] Todo: can delete an item and clear completed', async ({ page }) => {
-  await page.goto('https://demo.playwright.dev/todomvc/');
-
-  const input = page.locator('.new-todo');
+  await openApp(page);
 
   // 1) 아이템 3개 추가
-  for (const t of ['A', 'B', 'C']) {
-    await input.fill(`Task ${t}`);
-    await input.press('Enter');
-  }
-  await expect(page.locator('.todo-list li')).toHaveCount(3);
-  await expect(page.locator('.todo-count')).toContainText('3');
+  await addTodo(page, 'Task A');
+  await addTodo(page, 'Task B');
+  await addTodo(page, 'Task C');
 
-  // 2) 첫 번째 아이템 완료 처리
-  await page.locator('.todo-list li .toggle').nth(0).check();
-  await expect(page.locator('.todo-count')).toContainText('2');
+  await expectTodoCount(page, 3);
+  await expectItemsLeft(page, 3);
 
-  // 3) Completed 필터에서 완료된 1개만 보이는지 확인
-  await page.getByRole('link', { name: 'Completed' }).click();
-  await expect(page.locator('.todo-list li')).toHaveCount(1);
+  // 2) 첫 번째 아이템 완료 처리 → 남은 개수 2
+  await toggleTodo(page, 0);
+  await expectItemsLeft(page, 2);
 
-  // 4) Clear completed 클릭 → 완료 항목 삭제되어야 함
-  const clearCompleted = page.getByRole('button', { name: 'Clear completed' });
-  await expect(clearCompleted).toBeVisible();
-  await clearCompleted.click();
+  // 3) Completed 필터에서 완료된 1개만 보이는지
+  await setFilter(page, 'Completed');
+  await expectTodoCount(page, 1);
+
+  // 4) Clear completed → 완료 항목 삭제
+  await clearCompleted(page);
 
   // 5) All로 돌아가면 2개만 남아야 함
-  await page.getByRole('link', { name: 'All' }).click();
-  await expect(page.locator('.todo-list li')).toHaveCount(2);
-  await expect(page.locator('.todo-count')).toContainText('2');
+  await setFilter(page, 'All');
+  await expectTodoCount(page, 2);
+  await expectItemsLeft(page, 2);
 
-  // 6) 한 아이템 삭제(hover 후 destroy 버튼 클릭)
-  // TodoMVC는 삭제 버튼(.destroy)이 hover해야 나타나는 경우가 많음
-  const firstItem = page.locator('.todo-list li').first();
-  await firstItem.hover();
-  await firstItem.locator('.destroy').click();
+  // 6) 한 아이템 삭제(hover 후 destroy)
+  await deleteTodo(page, 0);
 
-  // 7) 1개만 남는지 확인
-  await expect(page.locator('.todo-list li')).toHaveCount(1);
-  await expect(page.locator('.todo-count')).toContainText('1');
+  // 7) 1개만 남는지
+  await expectTodoCount(page, 1);
+  await expectItemsLeft(page, 1);
 });
 
 test('[regression] Todo: persists items and completion after reload', async ({ page }) => {
