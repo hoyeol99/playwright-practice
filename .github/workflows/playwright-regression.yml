@@ -4,6 +4,8 @@ name: Playwright Regression (Manual)
   workflow_dispatch:
 
 jobs:
+  env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   regression:
     runs-on: ubuntu-latest
 

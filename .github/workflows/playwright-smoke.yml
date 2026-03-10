@@ -7,6 +7,8 @@ name: Playwright Smoke (CI)
     branches: [ "main" ]
 
 jobs:
+  env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   smoke:
     runs-on: ubuntu-latest
 

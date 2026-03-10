@@ -4,6 +4,10 @@
 
 
 
+GitHub Actions 런타임(Node 20→24) 전환 공지에 따라, Smoke workflow에서 Node24 강제 실행으로 호환성을 선제 검증한다.
+
+
+
 ### Tip: Click the CI badges at the top of this README to jump to the workflow runs.
 
 
