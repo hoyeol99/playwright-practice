@@ -100,3 +100,7 @@ After a workflow run finishes:
    - Smoke: `playwright-report`
    - Regression: `playwright-report-regression`
 3) Unzip and open `playwright-report/index.html` in your browser.
+
+
+
+- Ops Playbook: `docs/ops-playbook.md`
