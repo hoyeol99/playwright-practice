@@ -48,3 +48,9 @@ export async function deleteTodo(page: Page, index = 0) {
   await item.hover();
   await item.locator('.destroy').click();
 }
+
+export function makeTitle(base: string) {
+  // 충돌 방지용 고유 prefix (짧고 안전하게)
+  const uniq = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+  return `[qa-${uniq}] ${base}`;
+}
