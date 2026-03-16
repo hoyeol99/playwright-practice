@@ -107,3 +107,4 @@ After a workflow run finishes:
 
 - Flakiness Case #001: `docs/flakiness-case-001.md`
 
+- Flakiness/CI Case #002: `docs/flakiness-case-002.md`
